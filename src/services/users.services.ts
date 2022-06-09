@@ -38,7 +38,7 @@ const createUserService = async ({ name, email, password, isAdm }: IUser) => {
 
 const loginUserService = async ({ body }: Request): Promise<IStatusMessage> => {
   const foundUser = await userRepository.retrieve({
-    email: body.email.toLowerCase(),
+    email: body.email,
   });
 
   if (!foundUser) {
