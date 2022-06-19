@@ -1,7 +1,9 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, ManyToOne } from "typeorm";
 import { v4 as uuid } from "uuid";
+import { Cart } from "./cart.entity";
+import { Stock } from "./stock.entity";
 
-@Entity()
+@Entity("dvds")
 export class Dvd {
   @PrimaryColumn("uuid")
   readonly id: string;
@@ -11,6 +13,12 @@ export class Dvd {
 
   @Column({ nullable: false })
   duration: string;
+
+  @ManyToOne(() => Cart, (cart) => cart)
+  cart: Cart;
+
+  @ManyToOne(() => Stock, (stock) => stock)
+  stock: Stock;
 
   constructor() {
     if (!this.id) {

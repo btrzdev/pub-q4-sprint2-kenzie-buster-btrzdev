@@ -1,12 +1,13 @@
-import IUser from "../database/database";
+import { IUser } from "../database/database";
 import { User } from "../entities/user.entity";
 import { v4 as uuidv4 } from "uuid";
 import { hashSync } from "bcrypt";
-import userWOPassword from "../utils/utils";
+import { userWOPassword } from "../utils";
 import { AppDataSource } from "../data-source";
 import { sign } from "jsonwebtoken";
 import userRepository from "../repositories/user.repository";
 import { Request, Response } from "express";
+import { Cart } from "../entities/cart.entity";
 
 interface IStatusMessage {
   status: number;
@@ -15,6 +16,7 @@ interface IStatusMessage {
 
 const createUserService = async ({ name, email, password, isAdm }: IUser) => {
   const userRepository = AppDataSource.getRepository(User);
+  const cartRepository = AppDataSource.getRepository(Cart);
   const users = await userRepository.find();
 
   const userAlreadyExists = users.find((user) => user.email === email);
@@ -22,11 +24,19 @@ const createUserService = async ({ name, email, password, isAdm }: IUser) => {
   if (userAlreadyExists) {
     return "This email adress is already being used";
   }
+
+  const cart = new Cart();
+  cart.total = 0;
+
+  cartRepository.create(cart);
+  await cartRepository.save(cart);
+
   const user = new User();
   user.name = name;
   user.email = email;
   user.password = hashSync(password, 10);
   user.isAdm = isAdm;
+  user.cart = cart;
 
   //   const finalUser = userWOPassword(user);
 
@@ -56,7 +66,4 @@ const loginUserService = async ({ body }: Request): Promise<IStatusMessage> => {
   return { status: 200, message: { token } };
 };
 
-
-
 export { createUserService, loginUserService, IStatusMessage };
-

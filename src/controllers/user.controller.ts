@@ -2,7 +2,7 @@ import {
   createUserService,
   loginUserService,
 } from "../services/users.services";
-import IUser from "../database/database";
+import { IUser } from "../database/database";
 import { Request, Response } from "express";
 
 const createUserController = async (request: Request, response: Response) => {

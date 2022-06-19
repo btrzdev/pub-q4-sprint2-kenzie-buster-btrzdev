@@ -6,9 +6,11 @@ import {
   loginUserController,
 } from "../controllers/user.controller";
 
-const router = Router();
+const routes = Router();
 
-router.post("/register", createUserController);
-router.post("/login", loginUserController);
+export const userRoutes = () => {
+  routes.post("/users/register", createUserController);
+  routes.post("/users/login", loginUserController);
 
-export default router;
+  return routes;
+};

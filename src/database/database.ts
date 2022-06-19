@@ -11,4 +11,15 @@ interface IUser {
   updated_at: Date;
 }
 
-export default IUser;
+interface IDvd {
+  id: number;
+  name: string;
+  duration: string;
+}
+
+interface IDvdCreate {
+  name: string;
+  duration: string;
+}
+
+export { IUser, IDvd, IDvdCreate };
