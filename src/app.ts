@@ -1,26 +1,26 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
+import userRoutes from "./routes/user.routes";
+import { Request, Response, NextFunction } from "express";
 import { AppError } from "./errors/appError";
-import { appRoutes } from "./routes";
-
 const app = express();
+const port = process.env.PORT ?? 3000;
 
 app.use(express.json());
 
-appRoutes(app);
-
+app.use("/api/users", userRoutes);
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   if (err instanceof AppError) {
     return response.status(err.statusCode).json({
-      status: "error",
       message: err.message,
     });
   }
-
-  console.error(err);
-  return response.status(500).json({
-    status: "error",
-    message: "Internal server error",
-  });
+  console.log(err);
 });
 
-app.listen(3000);
+app.get("/", (req, res) => {
+  res.send("Express + TypeScript Server");
+});
+
+app.listen(port, () => {
+  console.log(`[server]: Server is running at https://localhost:${port}`);
+});

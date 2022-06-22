@@ -3,6 +3,7 @@ import { Cart } from "../entities/cart.entity";
 import { Dvd } from "../entities/dvd.entity";
 import { User } from "../entities/user.entity";
 import { fixedFloat } from "../utils";
+import {AppError} from "../errors/appError"
 
 const cartAddDvdService = async (dvd_id: string, userEmail: string) => {
   const userRepository = AppDataSource.getRepository(User);
@@ -59,10 +60,10 @@ const cartDeldDvdService = async (userEmail: string, dvd_id: string) => {
       throw new AppError(404, "Dvd is not in the cart");
     }
 
-    cart.dvds = cart.dvds.filter((dvd) => dvd.id !== dvd_id);
-    cart.total = fixedFloat(cart.dvds.reduce((acc, dvd) => acc + dvd.price, 0));
+    // cart.dvds = cart.dvds.filter((dvd) => dvd.id !== dvd_id);
+    // cart.total = fixedFloat(cart.dvds.reduce((acc, dvd) => acc + dvd.price, 0));
 
-    await cartRepository.save(cart);
+    // await cartRepository.save(cart);
 
     return
   }

@@ -16,7 +16,6 @@ export class Cart {
   @ManyToMany((type) => Dvd, {eager: true,})
   @JoinTable()
   dvds: Dvd[] 
-  
 
   constructor() {
     if (!this.id) {

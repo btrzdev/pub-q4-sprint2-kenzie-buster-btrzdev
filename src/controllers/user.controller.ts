@@ -6,14 +6,8 @@ import { IUser } from "../database/database";
 import { Request, Response } from "express";
 
 const createUserController = async (request: Request, response: Response) => {
-  const { email, name, password, isAdm } = request.body;
-
-  const user = await createUserService({
-    email,
-    name,
-    password,
-    isAdm,
-  } as IUser);
+  const user = await createUserService(request);
+  console.log(user)
 
   return response.status(201).json(user);
 };

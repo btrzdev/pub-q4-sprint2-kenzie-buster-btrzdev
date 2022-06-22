@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { verify } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import  IUser from "../database/database";
+import { IUser } from "../database/database";
 
 dotenv.config();
 
@@ -16,7 +16,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     if (err) {
       return res.status(403).json({ message: err });
     }
-
     req.decoded = decoded as IUser;
 
     return next();

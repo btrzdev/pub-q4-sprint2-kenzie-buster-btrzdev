@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryColumn, ManyToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Cart } from "./cart.entity";
 import { Stock } from "./stock.entity";
@@ -17,12 +24,9 @@ export class Dvd {
   @ManyToOne(() => Cart, (cart) => cart)
   cart: Cart;
 
-  @ManyToOne(() => Stock, (stock) => stock)
+  @OneToOne(() => Stock, {
+    eager: true,
+  })
+  @JoinColumn()
   stock: Stock;
-
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
-    }
-  }
 }

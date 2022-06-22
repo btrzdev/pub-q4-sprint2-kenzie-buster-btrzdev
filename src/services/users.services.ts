@@ -8,22 +8,29 @@ import { sign } from "jsonwebtoken";
 import userRepository from "../repositories/user.repository";
 import { Request, Response } from "express";
 import { Cart } from "../entities/cart.entity";
+import * as dotenv from "dotenv";
+import { AssertsShape } from "yup/lib/object";
+import { serializedCreateUserSchema } from "../schemas/userSchema";
 
 interface IStatusMessage {
   status: number;
   message: object;
 }
 
-const createUserService = async ({ name, email, password, isAdm }: IUser) => {
+const createUserService = async ({
+  validated,
+}: Request): Promise<AssertsShape<any>> => {
   const userRepository = AppDataSource.getRepository(User);
   const cartRepository = AppDataSource.getRepository(Cart);
   const users = await userRepository.find();
 
-  const userAlreadyExists = users.find((user) => user.email === email);
+  validated.password = hashSync(validated.password, 10);
+  console.log(validated);
+  const user: User = await userRepository.save(validated);
 
-  if (userAlreadyExists) {
-    return "This email adress is already being used";
-  }
+  return await serializedCreateUserSchema.validate(user, {
+    stripUnknown: true,
+  });
 
   const cart = new Cart();
   cart.total = 0;
@@ -31,12 +38,7 @@ const createUserService = async ({ name, email, password, isAdm }: IUser) => {
   cartRepository.create(cart);
   await cartRepository.save(cart);
 
-  const user = new User();
-  user.name = name;
-  user.email = email;
-  user.password = hashSync(password, 10);
-  user.isAdm = isAdm;
-  user.cart = cart;
+  //user.cart = cart;
 
   //   const finalUser = userWOPassword(user);
 
@@ -46,20 +48,22 @@ const createUserService = async ({ name, email, password, isAdm }: IUser) => {
   return user;
 };
 
-const loginUserService = async ({ body }: Request): Promise<IStatusMessage> => {
+const loginUserService = async ({
+  validated,
+}: Request): Promise<IStatusMessage> => {
   const foundUser = await userRepository.retrieve({
-    email: body.email,
+    email: validated.email,
   });
 
   if (!foundUser) {
-    return { status: 404, message: { message: "Invalid credentials." } };
+    return { status: 401, message: { message: "Invalid credentials." } };
   }
 
-  if (!(await foundUser.comparePwd(body.password))) {
-    return { status: 400, message: { message: "Invalid credentials." } };
+  if (!(await foundUser.comparePwd(validated.password))) {
+    return { status: 401, message: { message: "Invalid credentials." } };
   }
 
-  const token = sign({ ...foundUser }, process.env.SECRET_KEY, {
+  const token: string = sign({ ...foundUser }, process.env.SECRET_KEY, {
     expiresIn: process.env.EXPIRES_IN,
   });
 
