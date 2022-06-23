@@ -1,11 +1,12 @@
 import * as express from "express";
 import { JwtPayload } from "jsonwebtoken";
+import { IUser } from "../database/database";
 
 declare global {
   namespace Express {
     interface Request {
-      userEmail: string;
-      decoded: string | JwtPayload;    
+      user: IUser;
+      decoded: string | JwtPayload;
       validated: IUser;
     }
   }

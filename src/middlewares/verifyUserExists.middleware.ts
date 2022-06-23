@@ -12,7 +12,11 @@ const verifyUserExists = async (
   });
 
   if (foundUser) {
-    return response.status(409).json({ message: "Email already exists." });
+    return response
+      .status(409)
+      .json({
+        message: `Key (email)=(${request.validated.email}) already exists.`,
+      });
   }
 
   return next();

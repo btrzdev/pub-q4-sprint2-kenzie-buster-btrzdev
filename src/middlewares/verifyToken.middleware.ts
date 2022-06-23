@@ -16,15 +16,14 @@ const verifyToken = (
     return res.status(401).json({ message: "Missing authorization token" });
   }
 
-  
-
   return verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: err });
     }
+    console.log("DECODED", decoded);
     req.user = decoded as IUser;
 
-    return next();
+    next();
   });
 };
 
