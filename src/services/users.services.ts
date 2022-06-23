@@ -1,57 +1,32 @@
 import { IUser } from "../database/database";
 import { User } from "../entities/user.entity";
-import { v4 as uuidv4 } from "uuid";
 import { hashSync } from "bcrypt";
-import { userWOPassword } from "../utils";
-import { AppDataSource } from "../data-source";
 import { sign } from "jsonwebtoken";
-import userRepository from "../repositories/user.repository";
 import { Request, Response } from "express";
-import { Cart } from "../entities/cart.entity";
-import * as dotenv from "dotenv";
 import { AssertsShape } from "yup/lib/object";
-import { serializedCreateUserSchema } from "../schemas/userSchema";
+import { AppDataSource } from "../data-source";
 
 interface IStatusMessage {
   status: number;
   message: object;
 }
 
+const userRepository = AppDataSource.getRepository(User);
+
 const createUserService = async ({
   validated,
 }: Request): Promise<AssertsShape<any>> => {
-  const userRepository = AppDataSource.getRepository(User);
-  const cartRepository = AppDataSource.getRepository(Cart);
-  const users = await userRepository.find();
-
   validated.password = hashSync(validated.password, 10);
-  console.log(validated);
   const user: User = await userRepository.save(validated);
 
-  return await serializedCreateUserSchema.validate(user, {
-    stripUnknown: true,
-  });
-
-  const cart = new Cart();
-  cart.total = 0;
-
-  cartRepository.create(cart);
-  await cartRepository.save(cart);
-
-  //user.cart = cart;
-
-  //   const finalUser = userWOPassword(user);
-
-  userRepository.create(user);
-  await userRepository.save(user);
-
+  delete user.password;
   return user;
 };
 
 const loginUserService = async ({
   validated,
 }: Request): Promise<IStatusMessage> => {
-  const foundUser = await userRepository.retrieve({
+  const foundUser = await userRepository.findOneBy({
     email: validated.email,
   });
 
