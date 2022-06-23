@@ -9,9 +9,6 @@ import validateSchema from "../middlewares/validateSchema.middleware";
 
 const routes = Router();
 
-routes.get("/", (req, res) => {
-  res.send("Oi!");
-});
 routes.post(
   "/register",
   validateSchema(createUserSchema),

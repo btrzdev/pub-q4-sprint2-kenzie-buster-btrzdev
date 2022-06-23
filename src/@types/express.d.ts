@@ -5,7 +5,7 @@ declare global {
   namespace Express {
     interface Request {
       userEmail: string;
-      decoded: string | JwtPayload;
+      decoded: string | JwtPayload;    
       validated: IUser;
     }
   }

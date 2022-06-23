@@ -2,7 +2,7 @@ import {
   Entity,
   Column,
   PrimaryColumn,
-  ManyToOne,
+  OneToMany,
   OneToOne,
   JoinColumn,
 } from "typeorm";
@@ -16,13 +16,13 @@ export class Dvd {
   readonly id: string;
 
   @Column({ nullable: false })
-  name: string;
-
-  @Column({ nullable: false })
   duration: string;
 
-  @ManyToOne(() => Cart, (cart) => cart)
-  cart: Cart;
+  @Column({ nullable: false })
+  name: string;
+
+  @OneToMany(() => Cart, (cart) => cart)
+  cart: Cart[];
 
   @OneToOne(() => Stock, {
     eager: true,

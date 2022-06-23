@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Cart } from "./cart.entity";
@@ -25,11 +26,8 @@ export class User {
   @Column({ default: false })
   isAdm: boolean;
 
-  @OneToOne((type) => Cart, {
-    eager: true,
-  })
-  @JoinColumn()
-  cart: Cart;
+  @OneToMany(() => Cart, (cart) => cart.user)
+  cart: Cart[];
 
   comparePwd = async (receivedPwd: string): Promise<boolean> => {
     return await compare(receivedPwd, this.password);

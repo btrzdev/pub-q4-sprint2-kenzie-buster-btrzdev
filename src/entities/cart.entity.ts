@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany } from "typeorm";
+import { Entity, Column, PrimaryColumn, JoinTable, ManyToOne } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Dvd } from "./dvd.entity";
+import { User } from "./user.entity";
 
 @Entity("carts")
 export class Cart {
@@ -13,9 +14,10 @@ export class Cart {
   @Column({ nullable: false, type: "float" })
   total: number;
 
-  @ManyToMany((type) => Dvd, {eager: true,})
-  @JoinTable()
-  dvds: Dvd[] 
+  @ManyToOne(() => Dvd, (dvd) => dvd.cart)
+  dvd: Dvd;
+  @ManyToOne(() => User, (user) => user.id)
+  user: User;
 
   constructor() {
     if (!this.id) {
