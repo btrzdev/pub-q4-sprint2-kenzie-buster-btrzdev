@@ -7,7 +7,7 @@ const verifyUserIsAdmMiddleware = (
   next: NextFunction
 ) => {
   if (!request.user.isAdm) {
-    throw new AppError(401, "Missing admin permission");
+    throw new AppError(401, "missing admin permission");
   }
 
   return next();

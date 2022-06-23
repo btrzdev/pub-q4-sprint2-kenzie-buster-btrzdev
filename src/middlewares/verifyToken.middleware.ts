@@ -13,12 +13,17 @@ const verifyToken = (
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Missing authorization token" });
+    return res.status(401).json({ message: "missing authorization token" });
   }
 
   return verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(403).json({ message: err });
+      return res.status(401).json({
+        error: {
+          name: "JsonWebTokenError",
+          message: "jwt malformed",
+        },
+      });
     }
     console.log("DECODED", decoded);
     req.user = decoded as IUser;
