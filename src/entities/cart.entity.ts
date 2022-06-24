@@ -1,11 +1,17 @@
-import { Entity, Column, PrimaryColumn, JoinTable, ManyToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinTable,
+  ManyToOne,
+} from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Dvd } from "./dvd.entity";
 import { User } from "./user.entity";
 
 @Entity("carts")
 export class Cart {
-  @PrimaryColumn("uuid")
+  @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
   @Column({ default: false })
@@ -18,10 +24,4 @@ export class Cart {
   dvd: Dvd;
   @ManyToOne(() => User, (user) => user.id)
   user: User;
-
-  constructor() {
-    if (!this.id) {
-      this.id = uuid();
-    }
-  }
 }

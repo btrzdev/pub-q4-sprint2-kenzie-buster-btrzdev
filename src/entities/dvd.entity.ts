@@ -1,7 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   OneToMany,
   OneToOne,
   JoinColumn,
@@ -12,7 +12,7 @@ import { Stock } from "./stock.entity";
 
 @Entity("dvds")
 export class Dvd {
-  @PrimaryColumn("uuid")
+  @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
   @Column({ nullable: false })

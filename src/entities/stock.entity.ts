@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryColumn, OneToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Dvd } from "./dvd.entity";
 
 @Entity("stock")
 export class Stock {
-  @PrimaryColumn("uuid")
+  @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
   @Column({ nullable: false, type: "integer" })
@@ -15,5 +15,4 @@ export class Stock {
 
   @OneToOne(() => Dvd, (dvd) => dvd.stock)
   dvd?: Dvd;
-
 }

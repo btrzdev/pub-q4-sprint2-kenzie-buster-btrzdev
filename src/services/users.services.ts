@@ -16,8 +16,9 @@ const userRepository = AppDataSource.getRepository(User);
 const createUserService = async ({
   validated,
 }: Request): Promise<AssertsShape<any>> => {
-  validated.password = hashSync(validated.password, 10);
-  const user: User = await userRepository.save(validated);
+  const userData = validated as IUser;
+  userData.password = hashSync(userData.password, 10);
+  const user: User = await userRepository.save(userData);
 
   delete user.password;
   return user;
@@ -26,15 +27,16 @@ const createUserService = async ({
 const loginUserService = async ({
   validated,
 }: Request): Promise<IStatusMessage> => {
+  const userData = validated as IUser;
   const foundUser = await userRepository.findOneBy({
-    email: validated.email,
+    email: userData.email,
   });
 
   if (!foundUser) {
     return { status: 401, message: { message: "Invalid credentials." } };
   }
 
-  if (!(await foundUser.comparePwd(validated.password))) {
+  if (!(await foundUser.comparePwd(userData.password))) {
     return { status: 401, message: { message: "Invalid credentials." } };
   }
 

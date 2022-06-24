@@ -25,7 +25,6 @@ const verifyToken = (
         },
       });
     }
-    console.log("DECODED", decoded);
     req.user = decoded as IUser;
 
     next();

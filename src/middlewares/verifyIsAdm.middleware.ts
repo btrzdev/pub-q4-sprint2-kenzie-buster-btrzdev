@@ -3,11 +3,11 @@ import { AppError } from "../errors/appError";
 
 const verifyUserIsAdmMiddleware = (
   request: Request,
-  _: Response,
+  response: Response,
   next: NextFunction
 ) => {
   if (!request.user.isAdm) {
-    throw new AppError(401, "missing admin permission");
+    return response.status(401).json({ error: "missing admin permission" });
   }
 
   return next();

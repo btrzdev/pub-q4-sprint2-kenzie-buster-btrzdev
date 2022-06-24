@@ -20,6 +20,8 @@ interface IDvd {
 interface IDvdCreate {
   name: string;
   duration: string;
+  price: number;
+  quantity: number;
 }
 
 export { IUser, IDvd, IDvdCreate };

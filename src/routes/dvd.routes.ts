@@ -1,14 +1,26 @@
 import verifyToken from "../middlewares/verifyToken.middleware";
 import verifyIsAdm from "../middlewares/verifyIsAdm.middleware";
+import validateSchema from "../middlewares/validateSchema.middleware";
 import { Router } from "express";
 import {
   dvdCreateController,
   dvdListController,
+  dvdBuyController,
 } from "../controllers/dvd.controller";
+import { createDvdSchema } from "../schemas/dvdSchema";
 
-const routes = Router();
+const router = Router();
 
-routes.post("/dvds/register", verifyToken, verifyIsAdm, dvdCreateController);
-routes.get("/dvds"), dvdListController;
+router.post(
+  "/register",
+  verifyToken,
+  verifyIsAdm,
+  validateSchema(createDvdSchema),
+  dvdCreateController
+);
 
-export default routes;
+router.get("/", dvdListController);
+
+router.post("/buy/:id", verifyToken, dvdBuyController);
+
+export default router;

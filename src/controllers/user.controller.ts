@@ -7,7 +7,8 @@ import { Request, Response } from "express";
 import authenticateUser from "../services/auth.services";
 
 const createUserController = async (request: Request, response: Response) => {
-  if (request.validated.isAdm === true) {
+  const validatedData = request.validated as IUser;
+  if (validatedData.isAdm === true) {
     const authUser = await authenticateUser(request, response);
     console.log(authUser);
     if (!authUser.success) {
