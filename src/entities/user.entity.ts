@@ -27,7 +27,7 @@ export class User {
   isAdm: boolean;
 
   @OneToMany(() => Cart, (cart) => cart.user)
-  cart: Cart[];
+  carts: Cart[];
 
   comparePwd = async (receivedPwd: string): Promise<boolean> => {
     return await compare(receivedPwd, this.password);

@@ -22,7 +22,7 @@ export class Dvd {
   name: string;
 
   @OneToMany(() => Cart, (cart) => cart)
-  cart: Cart[];
+  carts: Cart[];
 
   @OneToOne(() => Stock, {
     eager: true,

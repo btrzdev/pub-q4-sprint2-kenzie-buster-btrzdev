@@ -3,70 +3,39 @@ import { Cart } from "../entities/cart.entity";
 import { Dvd } from "../entities/dvd.entity";
 import { User } from "../entities/user.entity";
 import { fixedFloat } from "../utils";
-import {AppError} from "../errors/appError"
+import { AppError } from "../errors/appError";
+import { IUser } from "../database/database";
 
-const cartAddDvdService = async (dvd_id: string, userEmail: string) => {
+const cartPayService = async (payingUser: IUser) => {
   const userRepository = AppDataSource.getRepository(User);
+  const cartRepository = AppDataSource.getRepository(Cart);
   const user = await userRepository.findOne({
     where: {
-      email: userEmail,
+      id: payingUser.id,
     },
   });
 
-  const cartRepository = AppDataSource.getRepository(Cart);
-  const cart = await userRepository.findOne({
-    where: {
-      id: user?.cart.id,
+  const updatedCarts = await cartRepository.update(
+    {
+      user: {
+        id: payingUser.id,
+      },
+      paid: false,
     },
-  });
-
-  const dvdRepository = AppDataSource.getRepository(Dvd);
-  const dvdToAdd = await userRepository.findOne({
-    where: {
-      id: dvd_id,
-    },
-  });
-
-  //   if (!dvdToAdd) {
-  //     throw new AppError(404, "Dvd not found");
-  //   }
-
-  //   if(cart && dvdToAdd){
-  //       if(cart.dvds.filter(dvd => dvd.name === dvdToAdd.name).length > 0) {
-  //           throw new AppError(409, "Dvd is already in the cart")
-  //       }
-  //cart.dvds = [...cart.dvds, dvdToAdd];
-  //cart.total = fixedFloat(cart.total + dvdToAdd.price);
-  //await cartRepository.save(cart);
-
-  //return cart;
-  //   }
-};
-
-const cartDeldDvdService = async (userEmail: string, dvd_id: string) => {
-  const userRepository = AppDataSource.getRepository(User);
-
-  const user = await userRepository.findOne({ where: { email: userEmail } });
-
-  const cartRepository = AppDataSource.getRepository(Cart);
-  const cart = await cartRepository.findOne({
-    where: {
-      id: user?.cart.id,
-    },
-  });
-
-  if (cart) {
-    if (cart.dvds.filter((dvd) => dvd.id === dvd_id).length === 0) {
-      throw new AppError(404, "Dvd is not in the cart");
+    {
+      paid: true,
     }
+  );
 
-    // cart.dvds = cart.dvds.filter((dvd) => dvd.id !== dvd_id);
-    // cart.total = fixedFloat(cart.dvds.reduce((acc, dvd) => acc + dvd.price, 0));
+  const carts = await cartRepository.find({
+    where: {
+      user: {
+        id: payingUser.id,
+      },
+    },
+  });
 
-    // await cartRepository.save(cart);
-
-    return
-  }
+  return carts;
 };
 
-export{ cartAddDvdService, cartDeldDvdService;
+export { cartPayService };

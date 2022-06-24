@@ -1,39 +1,11 @@
 import { Request, Response } from "express";
 import { AppError, handleError } from "../errors/appError";
-import {
-  cartAddDvdService,
-  cartDeldDvdService,
-} from "../services/cart.services";
+import { cartPayService } from "../services/cart.services";
 
-const cartAddDvdController = async (request: Request, response: Response) => {
-  try {
-    const { userEmail } = request.body;
+const cartPayController = async (request: Request, response: Response) => {
+  const carts = await cartPayService(request.user);
 
-    const { dvd_id } = request.body;
-
-    const cartAdd = await cartAddDvdService(userEmail, dvd_id);
-
-    response.json(cartAdd);
-  } catch (err) {
-    if (err instanceof AppError) {
-      handleError(err, response);
-    }
-  }
+  response.status(200).json({ cart: carts });
 };
 
-const cartDeldDvdController = async (request: Request, response: Response) => {
-  try {
-    const { dvd_id } = request.params;
-    const { userEmail } = request.body;
-
-    const cartDel = cartDeldDvdService(userEmail, dvd_id);
-
-    return response.sendStatus(204);
-  } catch (err) {
-    if (err instanceof AppError) {
-      handleError(err, response);
-    }
-  }
-};
-
-export { cartAddDvdController, cartDeldDvdController };
+export { cartPayController };
