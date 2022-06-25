@@ -31,6 +31,8 @@
     "typescript": "^4.7.3"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
     "dev": "ts-node-dev --files --rs src/app.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
