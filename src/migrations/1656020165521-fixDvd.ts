@@ -11,7 +11,7 @@ export class fixDvd1656020165521 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "dvds" DROP COLUMN "cartId"`);
     await queryRunner.query(
       `INSERT INTO "users" 
-      ("id,"email","password","isAdm","name")
+      ("id","email","password","isAdm","name")
       VALUES ('65f95126-591f-44f3-a0bb-494800070c41','kenzie@mail.com', '${hashSync(
         "umaSenhaForte!",
         10
