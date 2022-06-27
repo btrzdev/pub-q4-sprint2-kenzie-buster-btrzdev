@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 import { hashSync } from "bcrypt";
 
-export class createFullSchema1656166259040 implements MigrationInterface {
-  name = "createFullSchema1656166259040";
+export class createWholeSchema1656287337152 implements MigrationInterface {
+  name = "createWholeSchema1656287337152";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -28,11 +28,11 @@ export class createFullSchema1656166259040 implements MigrationInterface {
     );
     await queryRunner.query(
       `INSERT INTO "users" 
-            ("id","email","password","isAdm","name")
-            VALUES ('65f95126-591f-44f3-a0bb-494800070c41','kenzie@mail.com', '${hashSync(
-              "umaSenhaForte!",
-              10
-            )}', true, 'Jane Doe') `
+                  ("id","email","password","isAdm","name")
+                  VALUES ('65f95126-591f-44f3-a0bb-494800070c41','kenzie@mail.com', '${hashSync(
+                    "umaSenhaForte!",
+                    10
+                  )}', true, 'Jane Doe') `
     );
   }
 

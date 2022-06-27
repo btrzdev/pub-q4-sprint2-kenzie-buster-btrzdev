@@ -20,9 +20,9 @@ export class Cart {
   @Column({ nullable: false, type: "float" })
   total: number;
 
-  @ManyToOne(() => Dvd, (dvd) => dvd.id)
+  @ManyToOne(() => Dvd, (dvd) => dvd.carts, { eager: true })
   dvd: Dvd;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.carts)
   user: User;
 }

@@ -21,7 +21,7 @@ export class Dvd {
   @Column({ nullable: false })
   name: string;
 
-  @OneToMany(() => Cart, (cart) => cart)
+  @OneToMany(() => Cart, (cart) => cart.dvd)
   carts: Cart[];
 
   @OneToOne(() => Stock, {

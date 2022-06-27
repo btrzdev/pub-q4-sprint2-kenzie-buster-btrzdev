@@ -12,7 +12,4 @@ export class Stock {
 
   @Column({ nullable: false, type: "float" })
   price: number;
-
-  @OneToOne(() => Dvd, (dvd) => dvd.stock)
-  dvd?: Dvd;
 }
